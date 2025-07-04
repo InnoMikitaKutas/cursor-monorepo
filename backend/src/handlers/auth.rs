@@ -10,7 +10,7 @@ use crate::{
     database::DbPool,
     models::{
         AuthResponse, AuthUser, AuthUserResponse, Claims, ErrorResponse, LoginRequest,
-        RegisterRequest,
+        NewAuthUser, RegisterRequest,
     },
     services::auth_service,
 };
@@ -59,13 +59,11 @@ pub async fn register(
     };
 
     // Create user
-    let user = AuthUser {
+    let user = NewAuthUser {
         id: Uuid::new_v4(),
         name: payload.name,
         email: payload.email.clone(),
         password_hash,
-        created_at: Utc::now(),
-        updated_at: Utc::now(),
     };
 
     match auth_service::create_user(&pool, &user).await {

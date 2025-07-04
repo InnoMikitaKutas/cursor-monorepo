@@ -1,3 +1,4 @@
+use bigdecimal::{BigDecimal, FromPrimitive};
 use chrono::Utc;
 use diesel::prelude::*;
 use diesel_async::RunQueryDsl;
@@ -166,8 +167,8 @@ pub async fn create_user(
                 addresses::suite.eq(&address_data.suite),
                 addresses::city.eq(&address_data.city),
                 addresses::zipcode.eq(&address_data.zipcode),
-                addresses::lat.eq(address_data.geo.as_ref().map(|g| bigdecimal::BigDecimal::from(g.lat))),
-                addresses::lng.eq(address_data.geo.as_ref().map(|g| bigdecimal::BigDecimal::from(g.lng))),
+                addresses::lat.eq(address_data.geo.as_ref().map(|g| BigDecimal::from_f64(g.lat).unwrap_or_default())),
+                addresses::lng.eq(address_data.geo.as_ref().map(|g| BigDecimal::from_f64(g.lng).unwrap_or_default())),
             ))
             .execute(&mut conn)
             .await?;

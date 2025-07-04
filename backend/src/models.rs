@@ -1,4 +1,5 @@
 use chrono::{DateTime, Utc};
+use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 use validator::Validate;
@@ -43,7 +44,8 @@ pub struct Company {
     pub bs: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, Queryable)]
+#[diesel(table_name = crate::schema::auth_users)]
 pub struct AuthUser {
     pub id: Uuid,
     pub name: String,
@@ -51,6 +53,15 @@ pub struct AuthUser {
     pub password_hash: String,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
+}
+
+#[derive(Debug, Insertable)]
+#[diesel(table_name = crate::schema::auth_users)]
+pub struct NewAuthUser {
+    pub id: Uuid,
+    pub name: String,
+    pub email: String,
+    pub password_hash: String,
 }
 
 // Request/Response DTOs
@@ -151,7 +162,7 @@ pub struct ErrorResponse {
 }
 
 // JWT Claims
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Claims {
     pub sub: String, // user id
     pub email: String,

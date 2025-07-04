@@ -1,5 +1,5 @@
 # Build stage
-FROM rust:1.75 as builder
+FROM rust:1.82 as builder
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -17,7 +17,7 @@ COPY Cargo.toml Cargo.lock ./
 # Create a dummy main.rs to cache dependencies
 RUN mkdir src && echo "fn main() {}" > src/main.rs
 
-# Build dependencies
+# Build dependencies (this will create new Cargo.lock)
 RUN cargo build --release && rm src/main.rs
 
 # Copy source code

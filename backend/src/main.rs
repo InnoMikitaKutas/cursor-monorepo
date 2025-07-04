@@ -43,7 +43,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Configure CORS
     let cors = CorsLayer::new()
-        .allow_origin("http://localhost:3000".parse::<HeaderValue>()?)
+        .allow_origin(vec![
+            "http://localhost:3000".parse::<HeaderValue>()?,
+            "http://localhost:80".parse::<HeaderValue>()?,
+            "http://localhost".parse::<HeaderValue>()?,
+        ])
         .allow_methods([Method::GET, Method::POST, Method::PUT, Method::DELETE])
         .allow_credentials(true)
         .allow_headers([AUTHORIZATION, ACCEPT, CONTENT_TYPE]);

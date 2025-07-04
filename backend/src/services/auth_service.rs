@@ -4,13 +4,13 @@ use uuid::Uuid;
 
 use crate::{
     database::DbPool,
-    models::AuthUser,
+    models::{AuthUser, NewAuthUser},
     schema::auth_users,
 };
 
 pub async fn create_user(
     pool: &DbPool,
-    user: &AuthUser,
+    user: &NewAuthUser,
 ) -> Result<AuthUser, diesel::result::Error> {
     let mut conn = pool.get().await.map_err(|_| diesel::result::Error::BrokenTransactionManager)?;
     
